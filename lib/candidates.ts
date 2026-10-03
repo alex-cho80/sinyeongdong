@@ -9,9 +9,9 @@ export const candidates=points.map(([parcel,x,y])=>({parcel,x,y,dong:gugi.has(pa
 export function parcelLabel(parcel:string){const c=candidates.find(c=>c.parcel===parcel);return `${c?.dong??'신영동'} ${parcel}`;}
 export const reviewParcels=new Set(['214-13','214-21','214-68','219-11','219-13','235-4','239-8']);
 // User confirmed that parcels inside the supplied red outline are included.
-// Keep only ambiguous parcel labels pending; this is not a consent decision.
+// Inclusion is independent of label legibility; unclear labels stay flagged separately.
 export const boundarySource='사용자 제공 붉은색 경계도 내부 · 2026-10-03 사용자 기준 확인';
-export function defaultSurvey(parcel:string){return {parcel,inclusion:reviewParcels.has(parcel)?'검토중':'포함',source:boundarySource,note:'',revision:0};}
+export function defaultSurvey(parcel:string){return {parcel,inclusion:'포함',source:boundarySource,note:'',revision:0};}
 export const parcelIds=new Set(candidates.map(c=>c.parcel));
 export const references:Record<string,{name?:string;type?:string;road?:string;url:string}>= {
 '214-27':{name:'보은빌라',url:'https://zippoom.com/부동산/서울-종로구-신영동-보은빌라/1lg1yz'},
