@@ -1,0 +1,687 @@
+{
+  "source": "jibun_rnaddrkor_seoul.txt",
+  "totalRows": 89676,
+  "areaRows": 68,
+  "rows": [
+    {
+      "addressId": "11110186300500500024300000",
+      "lawCode": "1111018600",
+      "parcel": "176-26",
+      "mountain": false,
+      "roadCode": "111103005005",
+      "underground": false,
+      "buildingMain": "243",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110185310001200031200025",
+      "lawCode": "1111018600",
+      "parcel": "168-9",
+      "mountain": false,
+      "roadCode": "111103100012",
+      "underground": false,
+      "buildingMain": "312",
+      "buildingSub": "25"
+    },
+    {
+      "addressId": "11110186310002000047400005",
+      "lawCode": "1111018600",
+      "parcel": "239-9",
+      "mountain": false,
+      "roadCode": "111103100020",
+      "underground": false,
+      "buildingMain": "474",
+      "buildingSub": "5"
+    },
+    {
+      "addressId": "11110186310002000047700005",
+      "lawCode": "1111018600",
+      "parcel": "251-12",
+      "mountain": false,
+      "roadCode": "111103100020",
+      "underground": false,
+      "buildingMain": "477",
+      "buildingSub": "5"
+    },
+    {
+      "addressId": "11110186310002000048800000",
+      "lawCode": "1111018600",
+      "parcel": "239-23",
+      "mountain": false,
+      "roadCode": "111103100020",
+      "underground": false,
+      "buildingMain": "488",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186310002000049100000",
+      "lawCode": "1111018600",
+      "parcel": "4-3",
+      "mountain": false,
+      "roadCode": "111103100020",
+      "underground": false,
+      "buildingMain": "491",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186310002000049700007",
+      "lawCode": "1111018600",
+      "parcel": "9-4",
+      "mountain": false,
+      "roadCode": "111103100020",
+      "underground": false,
+      "buildingMain": "497",
+      "buildingSub": "7"
+    },
+    {
+      "addressId": "11110186310002000049700007",
+      "lawCode": "1111018600",
+      "parcel": "9-8",
+      "mountain": false,
+      "roadCode": "111103100020",
+      "underground": false,
+      "buildingMain": "497",
+      "buildingSub": "7"
+    },
+    {
+      "addressId": "11110186310002000049700007",
+      "lawCode": "1111018600",
+      "parcel": "9-9",
+      "mountain": false,
+      "roadCode": "111103100020",
+      "underground": false,
+      "buildingMain": "497",
+      "buildingSub": "7"
+    },
+    {
+      "addressId": "11110186410018000000600000",
+      "lawCode": "1111018600",
+      "parcel": "158-32",
+      "mountain": false,
+      "roadCode": "111104100180",
+      "underground": false,
+      "buildingMain": "6",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018000000600001",
+      "lawCode": "1111018600",
+      "parcel": "162-29",
+      "mountain": false,
+      "roadCode": "111104100180",
+      "underground": false,
+      "buildingMain": "6",
+      "buildingSub": "1"
+    },
+    {
+      "addressId": "11110186410018000001100000",
+      "lawCode": "1111018600",
+      "parcel": "158-31",
+      "mountain": false,
+      "roadCode": "111104100180",
+      "underground": false,
+      "buildingMain": "11",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018000001200002",
+      "lawCode": "1111018600",
+      "parcel": "158-28",
+      "mountain": false,
+      "roadCode": "111104100180",
+      "underground": false,
+      "buildingMain": "12",
+      "buildingSub": "2"
+    },
+    {
+      "addressId": "11110186410018000001200002",
+      "lawCode": "1111018600",
+      "parcel": "157-5",
+      "mountain": false,
+      "roadCode": "111104100180",
+      "underground": false,
+      "buildingMain": "12",
+      "buildingSub": "2"
+    },
+    {
+      "addressId": "11110186410018000001200004",
+      "lawCode": "1111018600",
+      "parcel": "157-4",
+      "mountain": false,
+      "roadCode": "111104100180",
+      "underground": false,
+      "buildingMain": "12",
+      "buildingSub": "4"
+    },
+    {
+      "addressId": "11110186410018000001300000",
+      "lawCode": "1111018600",
+      "parcel": "158-31",
+      "mountain": false,
+      "roadCode": "111104100180",
+      "underground": false,
+      "buildingMain": "13",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018000001300001",
+      "lawCode": "1111018600",
+      "parcel": "158-31",
+      "mountain": false,
+      "roadCode": "111104100180",
+      "underground": false,
+      "buildingMain": "13",
+      "buildingSub": "1"
+    },
+    {
+      "addressId": "11110186410018000001500000",
+      "lawCode": "1111018600",
+      "parcel": "158-31",
+      "mountain": false,
+      "roadCode": "111104100180",
+      "underground": false,
+      "buildingMain": "15",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110185410018100000800000",
+      "lawCode": "1111018600",
+      "parcel": "168-2",
+      "mountain": false,
+      "roadCode": "111104100181",
+      "underground": false,
+      "buildingMain": "8",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018100005400000",
+      "lawCode": "1111018600",
+      "parcel": "158-14",
+      "mountain": false,
+      "roadCode": "111104100181",
+      "underground": false,
+      "buildingMain": "54",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018100007600024",
+      "lawCode": "1111018600",
+      "parcel": "142-1",
+      "mountain": false,
+      "roadCode": "111104100181",
+      "underground": false,
+      "buildingMain": "76",
+      "buildingSub": "24"
+    },
+    {
+      "addressId": "11110186410018100009400000",
+      "lawCode": "1111018600",
+      "parcel": "111-2",
+      "mountain": false,
+      "roadCode": "111104100181",
+      "underground": false,
+      "buildingMain": "94",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018200005300000",
+      "lawCode": "1111018600",
+      "parcel": "84",
+      "mountain": false,
+      "roadCode": "111104100182",
+      "underground": false,
+      "buildingMain": "53",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018300001000006",
+      "lawCode": "1111018600",
+      "parcel": "105-10",
+      "mountain": false,
+      "roadCode": "111104100183",
+      "underground": false,
+      "buildingMain": "10",
+      "buildingSub": "6"
+    },
+    {
+      "addressId": "11110186410018300001300005",
+      "lawCode": "1111018600",
+      "parcel": "105-2",
+      "mountain": false,
+      "roadCode": "111104100183",
+      "underground": false,
+      "buildingMain": "13",
+      "buildingSub": "5"
+    },
+    {
+      "addressId": "11110186410018300001300005",
+      "lawCode": "1111018600",
+      "parcel": "105-17",
+      "mountain": false,
+      "roadCode": "111104100183",
+      "underground": false,
+      "buildingMain": "13",
+      "buildingSub": "5"
+    },
+    {
+      "addressId": "11110186410018300001500000",
+      "lawCode": "1111018600",
+      "parcel": "86-5",
+      "mountain": false,
+      "roadCode": "111104100183",
+      "underground": false,
+      "buildingMain": "15",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018500000600000",
+      "lawCode": "1111018600",
+      "parcel": "204-6",
+      "mountain": false,
+      "roadCode": "111104100185",
+      "underground": false,
+      "buildingMain": "6",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018500000600000",
+      "lawCode": "1111018600",
+      "parcel": "207",
+      "mountain": false,
+      "roadCode": "111104100185",
+      "underground": false,
+      "buildingMain": "6",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018500000600000",
+      "lawCode": "1111018600",
+      "parcel": "214-99",
+      "mountain": false,
+      "roadCode": "111104100185",
+      "underground": false,
+      "buildingMain": "6",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018500001000000",
+      "lawCode": "1111018600",
+      "parcel": "211-7",
+      "mountain": false,
+      "roadCode": "111104100185",
+      "underground": false,
+      "buildingMain": "10",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018500001000000",
+      "lawCode": "1111018600",
+      "parcel": "211-8",
+      "mountain": false,
+      "roadCode": "111104100185",
+      "underground": false,
+      "buildingMain": "10",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018500001200000",
+      "lawCode": "1111018600",
+      "parcel": "209-1",
+      "mountain": false,
+      "roadCode": "111104100185",
+      "underground": false,
+      "buildingMain": "12",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018500001500000",
+      "lawCode": "1111018600",
+      "parcel": "177-7",
+      "mountain": false,
+      "roadCode": "111104100185",
+      "underground": false,
+      "buildingMain": "15",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018500001500001",
+      "lawCode": "1111018600",
+      "parcel": "178-1",
+      "mountain": false,
+      "roadCode": "111104100185",
+      "underground": false,
+      "buildingMain": "15",
+      "buildingSub": "1"
+    },
+    {
+      "addressId": "11110186410018500001500001",
+      "lawCode": "1111018600",
+      "parcel": "179-13",
+      "mountain": false,
+      "roadCode": "111104100185",
+      "underground": false,
+      "buildingMain": "15",
+      "buildingSub": "1"
+    },
+    {
+      "addressId": "11110186410018500002000001",
+      "lawCode": "1111018600",
+      "parcel": "179-17",
+      "mountain": false,
+      "roadCode": "111104100185",
+      "underground": false,
+      "buildingMain": "20",
+      "buildingSub": "1"
+    },
+    {
+      "addressId": "11110186410018600005100000",
+      "lawCode": "1111018600",
+      "parcel": "214-16",
+      "mountain": false,
+      "roadCode": "111104100186",
+      "underground": false,
+      "buildingMain": "51",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018600006300005",
+      "lawCode": "1111018600",
+      "parcel": "228-4",
+      "mountain": false,
+      "roadCode": "111104100186",
+      "underground": false,
+      "buildingMain": "63",
+      "buildingSub": "5"
+    },
+    {
+      "addressId": "11110186410018700000300000",
+      "lawCode": "1111018600",
+      "parcel": "214-98",
+      "mountain": false,
+      "roadCode": "111104100187",
+      "underground": false,
+      "buildingMain": "3",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018700000700005",
+      "lawCode": "1111018600",
+      "parcel": "214-104",
+      "mountain": false,
+      "roadCode": "111104100187",
+      "underground": false,
+      "buildingMain": "7",
+      "buildingSub": "5"
+    },
+    {
+      "addressId": "11110186410018700002200000",
+      "lawCode": "1111018600",
+      "parcel": "214-23",
+      "mountain": false,
+      "roadCode": "111104100187",
+      "underground": false,
+      "buildingMain": "22",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018700002300000",
+      "lawCode": "1111018600",
+      "parcel": "229-5",
+      "mountain": false,
+      "roadCode": "111104100187",
+      "underground": false,
+      "buildingMain": "23",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018700002400000",
+      "lawCode": "1111018600",
+      "parcel": "229-7",
+      "mountain": false,
+      "roadCode": "111104100187",
+      "underground": false,
+      "buildingMain": "24",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018800000100000",
+      "lawCode": "1111018600",
+      "parcel": "218-9",
+      "mountain": false,
+      "roadCode": "111104100188",
+      "underground": false,
+      "buildingMain": "1",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018800000100000",
+      "lawCode": "1111018600",
+      "parcel": "47",
+      "mountain": false,
+      "roadCode": "111104100188",
+      "underground": false,
+      "buildingMain": "1",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018800000100000",
+      "lawCode": "1111018600",
+      "parcel": "49-6",
+      "mountain": false,
+      "roadCode": "111104100188",
+      "underground": false,
+      "buildingMain": "1",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018800002500000",
+      "lawCode": "1111018600",
+      "parcel": "224",
+      "mountain": false,
+      "roadCode": "111104100188",
+      "underground": false,
+      "buildingMain": "25",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018800002700004",
+      "lawCode": "1111018600",
+      "parcel": "224-1",
+      "mountain": false,
+      "roadCode": "111104100188",
+      "underground": false,
+      "buildingMain": "27",
+      "buildingSub": "4"
+    },
+    {
+      "addressId": "11110186410018800004700000",
+      "lawCode": "1111018600",
+      "parcel": "234-2",
+      "mountain": false,
+      "roadCode": "111104100188",
+      "underground": false,
+      "buildingMain": "47",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018800004700000",
+      "lawCode": "1111018600",
+      "parcel": "235-5",
+      "mountain": false,
+      "roadCode": "111104100188",
+      "underground": false,
+      "buildingMain": "47",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018800006500000",
+      "lawCode": "1111018600",
+      "parcel": "237-1",
+      "mountain": false,
+      "roadCode": "111104100188",
+      "underground": false,
+      "buildingMain": "65",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110186410018800006500000",
+      "lawCode": "1111018600",
+      "parcel": "238",
+      "mountain": false,
+      "roadCode": "111104100188",
+      "underground": false,
+      "buildingMain": "65",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110184410029500002900005",
+      "lawCode": "1111018600",
+      "parcel": "160-8",
+      "mountain": false,
+      "roadCode": "111104100295",
+      "underground": false,
+      "buildingMain": "29",
+      "buildingSub": "5"
+    },
+    {
+      "addressId": "11110184410029500002900005",
+      "lawCode": "1111018600",
+      "parcel": "157-10",
+      "mountain": false,
+      "roadCode": "111104100295",
+      "underground": false,
+      "buildingMain": "29",
+      "buildingSub": "5"
+    },
+    {
+      "addressId": "11110184410029500002900005",
+      "lawCode": "1111018600",
+      "parcel": "160-9",
+      "mountain": false,
+      "roadCode": "111104100295",
+      "underground": false,
+      "buildingMain": "29",
+      "buildingSub": "5"
+    },
+    {
+      "addressId": "11110186410049400001900001",
+      "lawCode": "1111018600",
+      "parcel": "8-2",
+      "mountain": false,
+      "roadCode": "111104100494",
+      "underground": false,
+      "buildingMain": "19",
+      "buildingSub": "1"
+    },
+    {
+      "addressId": "11110186410049400001900001",
+      "lawCode": "1111018600",
+      "parcel": "8-3",
+      "mountain": false,
+      "roadCode": "111104100494",
+      "underground": false,
+      "buildingMain": "19",
+      "buildingSub": "1"
+    },
+    {
+      "addressId": "11110183410049400003100000",
+      "lawCode": "1111018600",
+      "parcel": "5-31",
+      "mountain": false,
+      "roadCode": "111104100494",
+      "underground": false,
+      "buildingMain": "31",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110183410049400003100000",
+      "lawCode": "1111018600",
+      "parcel": "1-5",
+      "mountain": true,
+      "roadCode": "111104100494",
+      "underground": false,
+      "buildingMain": "31",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110183410049400003300000",
+      "lawCode": "1111018600",
+      "parcel": "5-37",
+      "mountain": false,
+      "roadCode": "111104100494",
+      "underground": false,
+      "buildingMain": "33",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110183410049400003500000",
+      "lawCode": "1111018600",
+      "parcel": "5-36",
+      "mountain": false,
+      "roadCode": "111104100494",
+      "underground": false,
+      "buildingMain": "35",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110183410049400003700000",
+      "lawCode": "1111018600",
+      "parcel": "5-35",
+      "mountain": false,
+      "roadCode": "111104100494",
+      "underground": false,
+      "buildingMain": "37",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110183410049400003900000",
+      "lawCode": "1111018600",
+      "parcel": "5-34",
+      "mountain": false,
+      "roadCode": "111104100494",
+      "underground": false,
+      "buildingMain": "39",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110183410049400004100000",
+      "lawCode": "1111018600",
+      "parcel": "5-28",
+      "mountain": false,
+      "roadCode": "111104100494",
+      "underground": false,
+      "buildingMain": "41",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110183410049400004300000",
+      "lawCode": "1111018600",
+      "parcel": "5-27",
+      "mountain": false,
+      "roadCode": "111104100494",
+      "underground": false,
+      "buildingMain": "43",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110183410049400004500000",
+      "lawCode": "1111018600",
+      "parcel": "5-39",
+      "mountain": false,
+      "roadCode": "111104100494",
+      "underground": false,
+      "buildingMain": "45",
+      "buildingSub": "0"
+    },
+    {
+      "addressId": "11110185410055600005600000",
+      "lawCode": "1111018600",
+      "parcel": "212-1",
+      "mountain": false,
+      "roadCode": "111104100556",
+      "underground": false,
+      "buildingMain": "56",
+      "buildingSub": "0"
+    }
+  ]
+}
