@@ -1,4 +1,4 @@
-import {compareParcelsDesc} from './housing';
+import {compareParcelsAsc} from './housing';
 // Visual transcription from user-supplied 2025-48 land-use plan. NOT an official parcel inventory.
 // Coordinates are image pixels for visual reference, not geographic coordinates.
 const points:[string,number,number][]=[
@@ -6,7 +6,7 @@ const points:[string,number,number][]=[
 ,['214-73',488,476],['214-70',532,462],['214-24',657,611],['214-22',779,639],['214-23',718,579],['214-88',709,997],['214-89',711,1030],['214-105',614,841],['229-8',773,545],['229-15',832,622],['229-16',862,652],['229-17',862,686],['230-3',840,484],['227-2',815,501],['227-3',863,503],['227-5',845,531],['228-1',819,528],['228-4',820,546],['235-3',793,324],['239-6',955,377],['239-17',903,355],['234-3',830,289]
 ];
 const gugi=new Set(['36-2','27-13','27-10','27-8','27-7']);
-export const candidates=points.map(([parcel,x,y])=>({parcel,x,y,dong:gugi.has(parcel)?'구기동':'신영동',lawCode:gugi.has(parcel)?'1111018200':'1111018600'})).sort((a,b)=>compareParcelsDesc(a.parcel,b.parcel));
+export const candidates=points.map(([parcel,x,y])=>({parcel,x,y,dong:gugi.has(parcel)?'구기동':'신영동',lawCode:gugi.has(parcel)?'1111018200':'1111018600'})).sort((a,b)=>compareParcelsAsc(a.parcel,b.parcel));
 export function parcelLabel(parcel:string){const c=candidates.find(c=>c.parcel===parcel);return `${c?.dong??'신영동'} ${parcel}`;}
 export const reviewParcels=new Set(['214-13','214-21','214-68','219-11','219-13','235-4','239-8']);
 // User confirmed that parcels inside the supplied red outline are included.

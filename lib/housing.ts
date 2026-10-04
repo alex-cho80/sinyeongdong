@@ -17,12 +17,12 @@ export function lookupStatus(l:any){if(!l?.checked)return '미조회';if(l.error
 export function roadText(l:any){const roads=[...new Set((l?.addresses??[]).map((a:any)=>clean(a.road)).filter(Boolean))];if(roads.length)return roads.join(' / ');if(!l?.checked)return '미조회';return l.addressStatus==='error'?'주소 조회 오류':'주소 결과 없음';}
 
 // Display order only: numeric parcel main/sub-number, then numeric unit number.
-export function compareParcelsDesc(a:string,b:string){
+export function compareParcelsAsc(a:string,b:string){
  const [am,as=0]=a.split('-').map(Number),[bm,bs=0]=b.split('-').map(Number);
- return (bm-am)||(bs-as)||b.localeCompare(a,'ko',{numeric:true});
+ return (am-bm)||(as-bs)||a.localeCompare(b,'ko',{numeric:true});
 }
-export function compareSurveyUnitsDesc(a:{parcel:string;unit:string;building:string},b:{parcel:string;unit:string;building:string}){
- const parcelOrder=compareParcelsDesc(a.parcel,b.parcel);if(parcelOrder)return parcelOrder;
+export function compareSurveyUnitsAsc(a:{parcel:string;unit:string;building:string},b:{parcel:string;unit:string;building:string}){
+ const parcelOrder=compareParcelsAsc(a.parcel,b.parcel);if(parcelOrder)return parcelOrder;
  const number=(unit:string)=>Number(unit.match(/\d+/g)?.at(-1)??-1);
- return (number(b.unit)-number(a.unit))||b.unit.localeCompare(a.unit,'ko',{numeric:true})||a.building.localeCompare(b.building,'ko',{numeric:true});
+ return (number(a.unit)-number(b.unit))||a.unit.localeCompare(b.unit,'ko',{numeric:true})||a.building.localeCompare(b.building,'ko',{numeric:true});
 }
