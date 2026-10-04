@@ -3,9 +3,9 @@ import { database, guard, failure } from '@/lib/store';
 import { candidates } from '@/lib/candidates';
 import addressLinks from '@/lib/address-links.json';
 import { clean } from '@/lib/housing';
-const secrets=()=>env as unknown as {JUSO_API_KEY?:string;BUILDING_API_KEY?:string};
+const secrets=()=>env as unknown as {JUSO_API_KEY?:string;JUSO_DETAIL_API_KEY?:string;BUILDING_API_KEY?:string};
 class UpstreamError extends Error { constructor(public service:string,public code:string){super(`${service}: ${code}`);} }
-export async function GET(){const e=secrets();return Response.json({address:!!e.JUSO_API_KEY,building:!!e.BUILDING_API_KEY},{headers:{'Cache-Control':'no-store'}});}
+export async function GET(){const e=secrets();return Response.json({address:!!e.JUSO_API_KEY,detail:!!e.JUSO_DETAIL_API_KEY,building:!!e.BUILDING_API_KEY},{headers:{'Cache-Control':'no-store'}});}
 async function read(url:URL,service:string){
  let r:Response;
  try{r=await fetch(url,{signal:AbortSignal.timeout(20000)});}catch{throw new UpstreamError(service,'연결 시간 초과 또는 통신 오류');}
@@ -25,7 +25,7 @@ async function lookupAddress(c:typeof candidates[number],key:string){
  }
  const [bun,ji='0']=c.parcel.split('-');
  const links=addressLinks.rows.filter(l=>l.lawCode===c.lawCode&&l.parcel===c.parcel);
- return output.filter(r=>r.admCd===c.lawCode&&r.mtYn==='0'&&((Number(r.lnbrMnnm)===Number(bun)&&Number(r.lnbrSlno)===Number(ji))||links.some(l=>l.roadCode===r.rnMgtSn&&Number(l.buildingMain)===Number(r.buldMnnm)&&Number(l.buildingSub)===Number(r.buldSlno)))).map(r=>({road:r.roadAddr,name:clean(r.bdNm),buildingId:r.bdMgtSn,roadCode:r.rnMgtSn,primaryParcel:`${Number(r.lnbrMnnm)}${Number(r.lnbrSlno)?'-'+Number(r.lnbrSlno):''}`,lawCode:r.admCd}));
+ return output.filter(r=>r.admCd===c.lawCode&&r.mtYn==='0'&&((Number(r.lnbrMnnm)===Number(bun)&&Number(r.lnbrSlno)===Number(ji))||links.some(l=>l.roadCode===r.rnMgtSn&&Number(l.buildingMain)===Number(r.buldMnnm)&&Number(l.buildingSub)===Number(r.buldSlno)))).map(r=>({road:r.roadAddr,buildingMain:r.buldMnnm,buildingSub:r.buldSlno,underground:r.udrtYn,name:clean(r.bdNm),buildingId:r.bdMgtSn,roadCode:r.rnMgtSn,primaryParcel:`${Number(r.lnbrMnnm)}${Number(r.lnbrSlno)?'-'+Number(r.lnbrSlno):''}`,lawCode:r.admCd}));
 }
 async function lookupTitles(parcel:string,lawCode:string,key:string){
  const [bun,ji='0']=parcel.split('-'),rows:any[]=[];
