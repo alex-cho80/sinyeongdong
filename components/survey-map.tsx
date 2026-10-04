@@ -6,6 +6,7 @@ import {Input} from '@/components/ui/input';
 import {candidates,parcelLabel,reviewParcels} from '@/lib/candidates';
 import {buildingName} from '@/lib/housing';
 import {consentColors,consentStatuses,consentSummary} from '@/lib/consent';
+import {unitMatchesParcel} from '@/lib/unit-inventory';
 import {updatedPoints} from '@/lib/map-points';
 type Props={selected:string;onSelect:(parcel:string)=>void;lookups:any[];households:{parcel:string;status:string}[];consent?:boolean};
 export function SurveyMap({selected,onSelect,lookups,households,consent=false}:Props){
@@ -13,7 +14,7 @@ export function SurveyMap({selected,onSelect,lookups,households,consent=false}:P
  const viewport=useRef<HTMLDivElement>(null);
  useEffect(()=>{if(!full)return;const old=document.body.style.overflow;document.body.style.overflow='hidden';const close=(e:KeyboardEvent)=>{if(e.key==='Escape')setFull(false);};window.addEventListener('keydown',close);return()=>{document.body.style.overflow=old;window.removeEventListener('keydown',close);};},[full]);
  const original=source==='original',width=original?1888:658,height=original?1333:588,path=original?'/plan.jpg':'/plan-updated.png';
- const rows=candidates.filter(c=>!reviewParcels.has(c.parcel)).map(c=>{const lookup=lookups.find(l=>l.parcel===c.parcel),name=buildingName(lookup,'명칭 미기재'),summary=consentSummary(households.filter(h=>h.parcel===c.parcel));const p=original?[c.x,c.y]:updatedPoints[c.parcel];return {...c,name,summary,p};}).filter(c=>c.p&&(!search||(parcelLabel(c.parcel)+' '+c.name).includes(search.trim()))&&(status==='전체'||c.summary.status===status||(status!=='혼재'&&c.summary.counts[status]>0)));
+ const rows=candidates.filter(c=>!reviewParcels.has(c.parcel)).map(c=>{const lookup=lookups.find(l=>l.parcel===c.parcel),name=buildingName(lookup,'명칭 미기재'),summary=consentSummary(households.filter(h=>unitMatchesParcel(h,c.parcel)));const p=original?[c.x,c.y]:updatedPoints[c.parcel];return {...c,name,summary,p};}).filter(c=>c.p&&(!search||(parcelLabel(c.parcel)+' '+c.name).includes(search.trim()))&&(status==='전체'||c.summary.status===status||(status!=='혼재'&&c.summary.counts[status]>0)));
  const selectedRow=rows.find(c=>c.parcel===selected);
  const unit=original?2.6:1;
  function changeSource(value:string){setSource(value);setFailed(false);setZoom(1);viewport.current?.scrollTo({top:0,left:0});}
@@ -33,7 +34,7 @@ export function SurveyMap({selected,onSelect,lookups,households,consent=false}:P
    </g>;})}</svg>}
    {failed&&<div className="diagram-error" role="alert">도면을 불러오지 못했습니다. <a href={path} target="_blank" rel="noreferrer">원본 도면 열기</a></div>}
   </div></div>
-  {consent&&selectedRow&&<div className="map-selection" aria-live="polite"><strong>{parcelLabel(selected)} · {selectedRow.name}</strong><span>{selectedRow.summary.total?`등록 ${selectedRow.summary.total}세대 · 동의 ${selectedRow.summary.counts['동의']} / 비동의 ${selectedRow.summary.counts['비동의']} / 보류 ${selectedRow.summary.counts['보류']} / 미조사 ${selectedRow.summary.counts['미조사']}`:'등록된 동의 조사 결과가 없습니다.'}</span></div>}
+  {consent&&selectedRow&&<div className="map-selection" aria-live="polite"><strong>{parcelLabel(selected)} · {selectedRow.name}</strong><span>{selectedRow.summary.total?`조사 대상 ${selectedRow.summary.total}세대 · 동의 ${selectedRow.summary.counts['동의']} / 비동의 ${selectedRow.summary.counts['비동의']} / 보류 ${selectedRow.summary.counts['보류']} / 미조사 ${selectedRow.summary.counts['미조사']}`:'등록된 동의 조사 결과가 없습니다.'}</span></div>}
   <div className="map-foot">위치는 도면 판독 참고점입니다. 지번 재판독 {reviewParcels.size}곳은 중복 위치 표시를 피하기 위해 목록에서 확인합니다.{consent?' 미조사는 흰색, 보류는 회색입니다.':''}</div>
  </section>;
 }
