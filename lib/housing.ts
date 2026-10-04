@@ -15,3 +15,14 @@ export function types(l:any){return [...new Set(uniqueBuildings(l).map(housingTy
 export function countText(l:any){const bs=uniqueBuildings(l);if(!bs.length)return emptyRegistryText(l);const h=bs.reduce((n,b)=>n+(Number(b.households)||0),0),f=bs.reduce((n,b)=>n+(Number(b.families)||0),0);return `${h}세대 / ${f}가구`;}
 export function lookupStatus(l:any){if(!l?.checked)return '미조회';if(l.errors?.length||l.addressStatus==='error'||l.buildingStatus==='error')return '조회 오류 있음';return l.buildings?.length?'조회 완료':'조회 완료 · 대장 결과 없음';}
 export function roadText(l:any){const roads=[...new Set((l?.addresses??[]).map((a:any)=>clean(a.road)).filter(Boolean))];if(roads.length)return roads.join(' / ');if(!l?.checked)return '미조회';return l.addressStatus==='error'?'주소 조회 오류':'주소 결과 없음';}
+
+// Display order only: numeric parcel main/sub-number, then numeric unit number.
+export function compareParcelsDesc(a:string,b:string){
+ const [am,as=0]=a.split('-').map(Number),[bm,bs=0]=b.split('-').map(Number);
+ return (bm-am)||(bs-as)||b.localeCompare(a,'ko',{numeric:true});
+}
+export function compareSurveyUnitsDesc(a:{parcel:string;unit:string;building:string},b:{parcel:string;unit:string;building:string}){
+ const parcelOrder=compareParcelsDesc(a.parcel,b.parcel);if(parcelOrder)return parcelOrder;
+ const number=(unit:string)=>Number(unit.match(/\d+/g)?.at(-1)??-1);
+ return (number(b.unit)-number(a.unit))||b.unit.localeCompare(a.unit,'ko',{numeric:true})||a.building.localeCompare(b.building,'ko',{numeric:true});
+}

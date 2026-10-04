@@ -1,5 +1,5 @@
-import {candidates,reviewParcels,parcelLabel} from './candidates';
-import {buildingName,clean} from './housing';
+import {candidates,reviewParcels} from './candidates';
+import {buildingName,clean,compareSurveyUnitsDesc} from './housing';
 
 export type SurveyUnit={id:string;parcel:string;parcels:string[];buildingId:string;building:string;unit:string;status:string;revision:number;source:string;official:boolean;basis:string;warning:string;road:string;floor:string};
 export const unitMatchesParcel=(u:{parcel:string;parcels?:string[]},p:string)=>u.parcel===p||!!u.parcels?.includes(p);
@@ -48,6 +48,6 @@ export function buildInventory(lookups:any[],catalogs:any[],saved:any[]=[]){
  // A saved consent always wins. Never transfer it to a different official unit.
  const merged=units.map(u=>{const s=saved.find(s=>s.id===u.id)||saved.find(s=>!used.has(s.id)&&unitMatchesParcel(u,s.parcel)&&s.building===u.building&&s.unit===u.unit);if(!s)return u;used.add(s.id);return {...u,...s,parcels:u.parcels,source:s.unit===u.unit?u.source:'관리자 호수 확인',official:s.unit===u.unit?u.official:true};});
  for(const s of saved){if(used.has(s.id))continue;merged.push({...s,parcels:[s.parcel],buildingId:'manual',source:'수동 등록 · 중복 여부 확인',official:false,basis:'관리자 등록',warning:'자동 목록과 중복 여부 확인',road:'',floor:''});}
- merged.sort((a,b)=>(parcelLabel(a.parcel)+' '+a.building+' '+a.unit).localeCompare(parcelLabel(b.parcel)+' '+b.building+' '+b.unit,'ko',{numeric:true}));
+ merged.sort(compareSurveyUnitsDesc);
  return {units:merged,buildings,issues,summary:{total:merged.length,official:merged.filter(u=>u.official).length,provisional:merged.filter(u=>!u.official).length,buildingCount:buildings.filter(b=>b.count).length,unresolvedBuildings:issues.filter(i=>i.reason.includes('수량 0')).length,unresolvedParcels:lookups.filter(l=>!reviewParcels.has(l.parcel)&&!l.buildings?.length).length,unitLookupErrors:catalogs.filter(c=>c.registryStatus==='error').length,conflicts:issues.filter(i=>!i.reason.includes('수량 0')).length,reviewParcels:reviewParcels.size}};
 }

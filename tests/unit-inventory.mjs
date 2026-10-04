@@ -12,10 +12,10 @@ try{
  const lookup={parcel:'27-10',buildings:[building],addresses:[]};
  const rows=['101호','102호','201호','202호','301호','302호'].flatMap(ho=>[{ho,dong:'',purpose:'연립주택',ownershipCode:'1',lot:'27-10',source:'건축물대장 전유공용면적'},{ho,dong:'',purpose:'연립주택',ownershipCode:'2',lot:'27-10'}]);
  const catalog={parcel:'27-10',registryStatus:'success',rows:[...rows,{ho:'주차장',purpose:'부대시설',ownershipCode:'1',lot:'27-10'},{ho:'999호',purpose:'연립주택',ownershipCode:'1',lot:'27-8'}]};
- const official=buildInventory([lookup],[catalog]);assert.equal(official.units.length,6);assert.equal(official.summary.official,6);assert.deepEqual(official.units.map(u=>u.unit),['101호','102호','201호','202호','301호','302호']);
+ const official=buildInventory([lookup],[catalog]);assert.equal(official.units.length,6);assert.equal(official.summary.official,6);assert.deepEqual(official.units.map(u=>u.unit),['302호','301호','202호','201호','102호','101호']);
  const duplicate={...lookup,parcel:'27-8'};assert.equal(buildInventory([lookup,duplicate],[catalog]).units.length,6);
  const conflicting=buildInventory([{...lookup,buildings:[{...building,households:4}]}],[catalog]);assert.equal(conflicting.units.length,6);assert.equal(conflicting.summary.conflicts,1);
- const multi={...lookup,buildings:[{...building,type:'단독주택',detail:'다가구주택',households:2,families:4}]};const provisional=buildInventory([multi],[]);assert.equal(provisional.units.length,4);assert.equal(provisional.units[0].unit,'조사용 1호');
+ const multi={...lookup,buildings:[{...building,type:'단독주택',detail:'다가구주택',households:2,families:4}]};const provisional=buildInventory([multi],[]);assert.equal(provisional.units.length,4);assert.equal(provisional.units[0].unit,'조사용 4호');
  const detail=buildInventory([{...lookup,buildings:[{...building,type:'단독주택',detail:'다가구용단독주택(7가구)',households:0,families:1}]}],[]);assert.equal(detail.units.length,7);assert.equal(detail.summary.conflicts,1);
  const saved={...provisional.units[0],status:'동의',revision:1};const preserved=buildInventory([multi],[catalog],[saved]);assert.equal(preserved.units.length,4);assert.equal(preserved.units.find(u=>u.id===saved.id).status,'동의');
  const savedOfficial={...official.units[0],status:'비동의',revision:2};assert.equal(buildInventory([lookup],[catalog],[savedOfficial]).units.find(u=>u.id===savedOfficial.id).status,'비동의');
