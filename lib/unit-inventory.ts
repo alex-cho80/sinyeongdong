@@ -24,6 +24,7 @@ export function buildInventory(lookups:any[],catalogs:any[],saved:any[]=[]){
   const siblingIndex=siblings.findIndex(v=>String(v.b.id)===id)+1;
   const building=(displayName==='명칭 미기재'?'명칭 미기재':displayName)+(clean(b.dong)&&clean(b.dong)!==displayName?' · '+clean(b.dong):siblings.length>1?' · 건물 '+siblingIndex:'');
   const notes:string[]=[];
+  if([...aliases].some(p=>['230-1','214-62','229-10','232-1','214-95'].includes(p)))notes.push('2026-10-05 현장 제보: 1가구 추정 · 대장 수량과 다름, 실거주 가구수 확인 필요');
   const detailNumber=clean(b.detail).match(/(\d+)\s*(?:가구|세대)/);if(detailNumber&&Number(detailNumber[1])!==expected)notes.push(`대장 수량 ${expected} / 상세용도 ${detailNumber[1]} 불일치`);
   if(h&&f&&h!==f)notes.push(`세대수 ${h} / 가구수 ${f} 상이`);
   if(expected&&!/주택|아파트/.test(b.type+' '+b.detail))notes.push('비주택 용도에 가구수 기재 · 주거 여부 확인');

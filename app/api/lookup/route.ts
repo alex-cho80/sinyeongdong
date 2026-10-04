@@ -2,15 +2,27 @@ import { env } from 'cloudflare:workers';
 import { database, guard, failure } from '@/lib/store';
 import { candidates } from '@/lib/candidates';
 import addressLinks from '@/lib/address-links.json';
+import {parseRegistry} from '@/lib/unit-catalog';
 import { clean } from '@/lib/housing';
 const secrets=()=>env as unknown as {JUSO_API_KEY?:string;JUSO_DETAIL_API_KEY?:string;BUILDING_API_KEY?:string};
 class UpstreamError extends Error { constructor(public service:string,public code:string){super(`${service}: ${code}`);} }
-export async function GET(){const e=secrets();return Response.json({address:!!e.JUSO_API_KEY,detail:!!e.JUSO_DETAIL_API_KEY,building:!!e.BUILDING_API_KEY},{headers:{'Cache-Control':'no-store'}});}
+export async function GET(req:Request){
+ const parcel=new URL(req.url).searchParams.get('parcel');
+ if(!parcel){const e=secrets();return Response.json({address:!!e.JUSO_API_KEY,detail:!!e.JUSO_DETAIL_API_KEY,building:!!e.BUILDING_API_KEY},{headers:{'Cache-Control':'no-store'}});}
+ const c=candidates.find(c=>c.parcel===parcel);
+ if(!c)return Response.json({error:'조사대장의 지번만 조회할 수 있습니다.'},{status:400});
+ try{const row:any=await database().prepare('SELECT payload FROM lookups WHERE parcel=?').bind(parcel).first();
+ const old=row?JSON.parse(row.payload):null;
+ if(old?.lookupVersion===2&&!old.errors?.length&&Date.now()-Date.parse(old.checked)<86400000)return Response.json(old,{headers:{'Cache-Control':'no-store'}});
+ return await refreshLookup(c);
+ }catch(e){return failure(e);}
+}
+
 async function read(url:URL,service:string){
  let r:Response;
  try{r=await fetch(url,{signal:AbortSignal.timeout(20000)});}catch{throw new UpstreamError(service,'연결 시간 초과 또는 통신 오류');}
  if(!r.ok)throw new UpstreamError(service,`HTTP ${r.status}`);
- try{return await r.json() as any;}catch{throw new UpstreamError(service,'JSON 응답 해석 실패');}
+ try{return parseRegistry(await r.text()) as any;}catch{throw new UpstreamError(service,'JSON 응답 해석 실패');}
 }
 async function lookupAddress(c:typeof candidates[number],key:string){
  const output:any[]=[];
@@ -42,9 +54,14 @@ async function lookupTitles(parcel:string,lawCode:string,key:string){
 }
 export async function POST(req:Request){
  const g=guard(req);if(g)return g;
+ try{const payload=await req.json() as {parcel?:string};const c=candidates.find(c=>c.parcel===payload.parcel);
+ if(!c)return Response.json({error:'조사대장의 지번만 조회할 수 있습니다.'},{status:400});
+ return await refreshLookup(c);
+ }catch(e){return failure(e);}
+}
+// Only the official public-data cache is written. Survey and consent records are untouched.
+async function refreshLookup(c:typeof candidates[number]){
  try{
-  const payload=await req.json() as {parcel?:string};const c=candidates.find(c=>c.parcel===payload.parcel);
-  if(!c)return Response.json({error:'조사대장의 지번만 조회할 수 있습니다.'},{status:400});
   const e=secrets();if(!e.JUSO_API_KEY||!e.BUILDING_API_KEY)return Response.json({error:'주소 API와 건축HUB 인증키 설정이 필요합니다.'},{status:503});
   const [addressResult,titleResult]=await Promise.allSettled([lookupAddress(c,e.JUSO_API_KEY),lookupTitles(c.parcel,c.lawCode,e.BUILDING_API_KEY)]);
   const addresses=addressResult.status==='fulfilled'?addressResult.value:[];
@@ -59,7 +76,7 @@ export async function POST(req:Request){
   buildings=[...new Map(buildings.map(b=>[b.id,b])).values()];
   const db=database();const previous:any=await db.prepare('SELECT payload FROM lookups WHERE parcel=?').bind(c.parcel).first();
   const old=previous?JSON.parse(previous.payload):null;
-  const result={addresses:addressResult.status==='fulfilled'?addresses:(old?.addresses??[]),buildings:titleResult.status==='fulfilled'?buildings:(old?.buildings??[]),checked:new Date().toISOString(),lawCode:c.lawCode,dong:c.dong,errors,addressStatus:addressResult.status==='fulfilled'?'success':'error',buildingStatus:titleResult.status==='fulfilled'?'success':'error',notice:'사용자 제공 빨간 경계를 조사 기준으로 사용합니다. API 결과 없음은 빈 필지·철거를 의미하지 않습니다. 세대수와 가구수는 별도 집계하며, 부속지번은 대표지번과 중복 집계하지 않습니다.'};
+  const result={lookupVersion:2,addresses:addressResult.status==='fulfilled'?addresses:(old?.addresses??[]),buildings:titleResult.status==='fulfilled'?buildings:(old?.buildings??[]),checked:new Date().toISOString(),lawCode:c.lawCode,dong:c.dong,errors,addressStatus:addressResult.status==='fulfilled'?'success':'error',buildingStatus:titleResult.status==='fulfilled'?'success':'error',notice:'사용자 제공 빨간 경계를 조사 기준으로 사용합니다. API 결과 없음은 빈 필지·철거를 의미하지 않습니다. 세대수와 가구수는 별도 집계하며, 부속지번은 대표지번과 중복 집계하지 않습니다.'};
   await db.prepare('INSERT INTO lookups(parcel,payload,updated) VALUES(?,?,?) ON CONFLICT(parcel) DO UPDATE SET payload=excluded.payload,updated=excluded.updated').bind(c.parcel,JSON.stringify(result),result.checked).run();
   return Response.json(result);
  }catch(e){return failure(e);}
