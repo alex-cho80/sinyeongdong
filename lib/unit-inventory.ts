@@ -39,7 +39,7 @@ export function buildInventory(lookups:any[],catalogs:any[],saved:any[]=[]){
   else if(catalog.addressStatus==='no_data')detailCheck='상세주소 호수 결과 없음';
   else if(catalog.addressStatus==='not_available')detailCheck='상세주소 조회할 건물 주소 없음';
   else if(catalog.addressStatus==='success'){
-   const key=(r:any)=>(siblings.length>1?norm(r.dong)+'|':'')+clean(r.ho).replace(/^.*층/,'').replace(/\s|호$/g,'').toUpperCase();
+   const key=(r:any)=>(siblings.length>1?norm(r.dong)+'|':'')+clean(r.ho).replace(/^.*층/,'').replace(/\s/g,'').replace(/호$/,'').toUpperCase();
    const registrySet=new Set(official.map(key)),addressSet=new Set(detailRows.map(key));
    detailCheck=catalog.registryStatus==='success'&&registrySet.size>0&&registrySet.size===addressSet.size&&[...registrySet].every(k=>addressSet.has(k))?'대장·상세주소 호수 일치':'대장·상세주소 호수 대조 필요';
   }

@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: '24'
       - name: Install pinned package manager
-        run: npm install --global pnpm@11.25.0
+        run: npm install --global --ignore-scripts pnpm@11.25.0
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Type check
@@ -32,18 +32,3 @@ jobs:
         run: node tests/unit-inventory.mjs
       - name: Build Worker and client
         run: pnpm build
-  sonar-report:
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    steps:
-      - name: Read public SonarCloud findings
-        run: |
-          python3 - <<'PY'
-          import json, urllib.request
-          url = "https://sonarcloud.io/api/issues/search?componentKeys=alex-cho80_sinyeongdong&pullRequest=2&resolved=false&ps=100"
-          with urllib.request.urlopen(url, timeout=45) as response:
-              report = json.load(response)
-          for issue in report.get("issues", []):
-              print(json.dumps({key: issue.get(key) for key in ("key", "rule", "severity", "type", "component", "line", "message")}, ensure_ascii=False))
-          print("Total issues:", report.get("total"))
-          PY
