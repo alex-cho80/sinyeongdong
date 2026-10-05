@@ -11,6 +11,7 @@ import {VectorConsentMap} from './vector-consent-map';
 import {assetPath} from '@/lib/client-runtime';
 import {naverPoints} from '@/lib/naver-map-points';
 import {updatedPoints} from '@/lib/map-points';
+import {mapLocationNotes,supplementalNaverPoints} from '@/lib/map-supplement';
 type Props={selected:string;onSelect:(parcel:string)=>void;lookups:any[];households:{parcel:string;status:string}[];consent?:boolean};
 export function SurveyMap({selected,onSelect,lookups,households,consent=false}:Props){
  const [view,setView]=useState('image');
@@ -20,6 +21,8 @@ export function SurveyMap({selected,onSelect,lookups,households,consent=false}:P
  const original=source==='original',naver=source==='naver',width=original?1888:naver?861:658,height=original?1333:naver?925:588,path=assetPath(original?'/plan.jpg':naver?'/plan-naver.png':'/plan-updated.png');
  const rows=candidates.filter(c=>!reviewParcels.has(c.parcel)&&!unmappedParcels.has(c.parcel)).map(c=>{const lookup=lookups.find(l=>l.parcel===c.parcel),name=buildingName(lookup,'명칭 미기재'),summary=consentSummary(households.filter(h=>unitMatchesParcel(h,c.parcel)));const p=original?(c.x!==null&&c.y!==null?[c.x,c.y]:undefined):naver?naverPoints[c.parcel]:updatedPoints[c.parcel];return {...c,name,summary,p};}).filter(c=>c.p&&(!search||(parcelLabel(c.parcel)+' '+c.name).includes(search.trim()))&&(status==='전체'||c.summary.status===status||(status!=='혼재'&&c.summary.counts[status]>0)));
  const selectedRow=rows.find(c=>c.parcel===selected);
+ const missing=candidates.filter(c=>reviewParcels.has(c.parcel)||unmappedParcels.has(c.parcel)||(original&&(c.x===null||c.y===null)));
+ const apiLabel=(parcel:string)=>{const l=lookups.find(l=>l.parcel===parcel);return !l?'API 미조회':l.errors?.length?'API 오류 · 재확인 필요':l.addresses?.length||l.buildings?.length?'주소·대장 조회 결과 있음':'주소·대장 결과 없음 · 토지 지번 참고';};
  const unit=original?2.6:naver?1.5:1;
  function changeSource(value:string){setSource(value);setFailed(false);setZoom(1);viewport.current?.scrollTo({top:0,left:0});}
  if(consent&&view==='vector')return <VectorConsentMap selected={selected} onSelect={onSelect} lookups={lookups} households={households} onShowImage={()=>{setView('image');changeSource('naver');}}/>;
@@ -31,7 +34,7 @@ export function SurveyMap({selected,onSelect,lookups,households,consent=false}:P
   <div ref={viewport} className="diagram-viewport"><div className="diagram-canvas" style={{width:`${zoom*100}%`,aspectRatio:`${width}/${height}`}}>
    <img key={path} src={path} alt={original?'종로구 제2025-48호 토지이용계획도 원본':naver?'사용자 첨부 네이버 지도, 신영동 214번지 일대 파란 구역 경계':'신영동 214번지 일대 사용자 지정 붉은 경계 구역도'} width={width} height={height} className={original?'official-diagram':''} onError={()=>setFailed(true)} draggable={false}/>
    {!failed&&<svg className="diagram-markers" viewBox={`0 0 ${width} ${height}`} aria-label="지번별 상태 표시">{rows.map(c=>{const [x,y]=c.p!;const active=c.parcel===selected;const {counts,total,status:state}=c.summary;const fill=consent?consentColors[state]??'#fff':active?'#176aaf':'#fff';let offset=0;const radius=5*unit;return <g key={c.parcel} role="button" tabIndex={0} aria-label={`${parcelLabel(c.parcel)} ${c.name} ${consent?state:''}`} aria-pressed={active} onClick={()=>onSelect(c.parcel)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onSelect(c.parcel);}}} className="parcel-marker">
-    <title>{parcelLabel(c.parcel)} · {c.name}{consent?`\n${state} · 동의 ${counts['동의']} / 비동의 ${counts['비동의']} / 보류 ${counts['보류']} / 미조사 ${counts['미조사']}`:''}</title>
+    <title>{parcelLabel(c.parcel)} · {c.name}{supplementalNaverPoints[c.parcel]?`\n네이버 지도 위치 대조 · ${apiLabel(c.parcel)}`:''}{consent?`\n${state} · 동의 ${counts['동의']} / 비동의 ${counts['비동의']} / 보류 ${counts['보류']} / 미조사 ${counts['미조사']}`:''}</title>
     <circle cx={x} cy={y} r={10*unit} fill="transparent"/>{active&&<circle cx={x} cy={y} r={9*unit} fill="none" stroke="#1564af" strokeWidth={2*unit}/>}
     <circle cx={x} cy={y} r={radius} fill={fill} stroke={active?'#1564af':'#3e5366'} strokeWidth={unit} strokeDasharray={consent&&state==='미조사'?`${2*unit} ${1.5*unit}`:undefined}/>
     {consent&&state==='혼재'&&consentStatuses.filter(s=>counts[s]).map(s=>{const portion=counts[s]/total*100;const start=offset;offset+=portion;return <circle key={s} cx={x} cy={y} r={3.7*unit} pathLength="100" fill="none" stroke={consentColors[s]} strokeWidth={4.8*unit} strokeDasharray={`${portion} ${100-portion}`} strokeDashoffset={-start} transform={`rotate(-90 ${x} ${y})`}/>;})}
@@ -39,7 +42,8 @@ export function SurveyMap({selected,onSelect,lookups,households,consent=false}:P
    </g>;})}</svg>}
    {failed&&<div className="diagram-error" role="alert">도면을 불러오지 못했습니다. <a href={path} target="_blank" rel="noreferrer">원본 도면 열기</a></div>}
   </div></div>
-  {consent&&selectedRow&&<div className="map-selection" aria-live="polite"><strong>{parcelLabel(selected)} · {selectedRow.name}</strong><span>{selectedRow.summary.total?`조사 대상 ${selectedRow.summary.total}세대 · 동의 ${selectedRow.summary.counts['동의']} / 비동의 ${selectedRow.summary.counts['비동의']} / 보류 ${selectedRow.summary.counts['보류']} / 미조사 ${selectedRow.summary.counts['미조사']}`:'등록된 동의 조사 결과가 없습니다.'}</span></div>}
-  <div className="map-foot">{naver?'지번 구분은 조사 대상 구역 도면과 동일하며, 네이버 지도에 위치를 맞춘 참고점입니다.':'위치는 도면 판독 참고점입니다.'} 이미지에서 위치를 명확히 확인할 수 없는 지번은 조사 목록에서 확인합니다.{consent?' 미조사는 흰색, 보류는 회색입니다.':''}</div>
+  {consent&&selectedRow&&<div className="map-selection" aria-live="polite"><strong>{parcelLabel(selected)} · {selectedRow.name}</strong><span>{selectedRow.summary.total?`조사 대상 ${selectedRow.summary.total}세대 · 동의 ${selectedRow.summary.counts['동의']} / 비동의 ${selectedRow.summary.counts['비동의']} / 보류 ${selectedRow.summary.counts['보류']} / 미조사 ${selectedRow.summary.counts['미조사']}`:'등록된 조사 세대가 없습니다. 세대수 확인이 필요합니다.'}</span>{supplementalNaverPoints[selected]&&<span>네이버 지도 위치 대조 · {apiLabel(selected)}{mapLocationNotes[selected]?' · '+mapLocationNotes[selected]:''}</span>}</div>}
+  <details className="map-foot"><summary>지도 위치 확인이 필요한 {missing.length}개 지번 · 조사 목록은 유지됩니다</summary><div>{missing.map(c=><p key={c.parcel}><button type="button" onClick={()=>onSelect(c.parcel)}>{parcelLabel(c.parcel)}</button> · {mapLocationNotes[c.parcel]??'고시 도면의 표시 좌표가 없습니다. 새 첨부 도면 또는 네이버 지도에서 확인해주세요.'}</p>)}</div></details>
+  <div className="map-foot">{naver?'지번 구분은 조사 대상 구역과 동일합니다. 추가 지번은 네이버 지도 위치를 대조해 두 도면에 함께 표시했습니다.':'위치는 도면 판독 참고점입니다.'} 주소·대장 결과가 없는 토지 지번도 지도 판독 참고점으로 표시하며, 세대수를 임의로 만들지 않습니다. 위치가 불명확한 지번은 위 확인 목록에 남깁니다.{consent?' 미조사는 흰색, 보류는 회색입니다.':''}</div>
  </section>;
 }

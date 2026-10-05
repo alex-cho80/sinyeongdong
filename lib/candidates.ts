@@ -1,3 +1,4 @@
+import {updatedPoints} from './map-points';
 import {compareParcelsAsc} from './housing';
 // Visual transcription from user-supplied 2025-48 land-use plan. NOT an official parcel inventory.
 // Coordinates are image pixels for visual reference, not geographic coordinates.
@@ -9,10 +10,10 @@ const points:[string,number|null,number|null][]=[
 points.push(...['232-3','214','214-1','214-7','234-4','239-23','226-1','225-2','241-7','227-1','228-2','27-20'].map(p=>[p,null,null] as [string,null,null]));
 points.push(['214-106',null,null],['244',null,null],['228-3',null,null],['228-16',null,null],['221-7',null,null]);
 const gugi=new Set(['36-2','27-13','27-10','27-8','27-7','27-20']);
-export const unmappedParcels=new Set(['214-106','244','228-3','228-16','221-7','214-21']);
+export const unmappedParcels=new Set(points.filter(([parcel])=>!updatedPoints[parcel]).map(([parcel])=>parcel));
 export const candidates=points.map(([parcel,x,y])=>({parcel,x,y,dong:gugi.has(parcel)?'구기동':'신영동',lawCode:gugi.has(parcel)?'1111018200':'1111018600'})).sort((a,b)=>compareParcelsAsc(a.parcel,b.parcel));
 export function parcelLabel(parcel:string){const c=candidates.find(c=>c.parcel===parcel);return `${c?.dong??'신영동'} ${parcel}`;}
-export const reviewParcels=new Set(['214-13','214-68','235-4','239-8']);
+export const reviewParcels=new Set(['214-13','214-68','239-8']);
 // User confirmed that parcels inside the supplied red outline are included.
 // Inclusion is independent of label legibility; unclear labels stay flagged separately.
 export const boundarySource='사용자 제공 붉은색 경계도 내부 · 2026-10-03 사용자 기준 확인';

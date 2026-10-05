@@ -1,6 +1,8 @@
+import {projectFromNaver} from './map-image-registration';
+import {supplementalNaverPoints} from './map-supplement';
 // Manually read label positions in the supplied 658 x 588 red-boundary image.
 // These are diagram reference points, not cadastral coordinates or polygons.
-export const updatedPoints:Record<string,[number,number]>={
+export const surveyReferencePoints:Record<string,[number,number]>={
 '36-2':[218,165],'27-13':[250,145],'27-10':[274,155],'27-8':[300,146],'27-7':[325,170],
 '213-2':[184,199],'213-3':[178,213],'214-75':[225,207],'214-33':[266,191],'214-37':[209,232],
 '214-38':[213,254],'214-39':[224,278],'214-40':[244,290],'214-83':[234,301],'214-84':[250,304],
@@ -27,5 +29,9 @@ export const updatedPoints:Record<string,[number,number]>={
 '214-23':[319,247],'214-88':[316,444],'214-89':[314,462],'214-105':[266,372],
 '229-8':[339,231],'229-15':[371,264],'229-16':[390,278],'229-17':[391,291],
 '230-3':[376,203],'227-2':[366,213],'227-3':[389,211],'227-5':[385,223],
-'228-1':[355,224],'228-4':[366,238],'235-3':[353,115],'239-6':[425,151],'239-17':[407,139],'234-3':[374,110]
+'228-1':[355,224],'228-4':[366,238],'239-6':[425,151],'239-17':[407,139],'234-3':[374,110]
 };
+
+// Supplements have one shared identity and location in both map menus.
+export const updatedPoints:Record<string,[number,number]>={...surveyReferencePoints,
+ ...Object.fromEntries(Object.entries(supplementalNaverPoints).map(([parcel,p])=>[parcel,projectFromNaver(p)]))};
