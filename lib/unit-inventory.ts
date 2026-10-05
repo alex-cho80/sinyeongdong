@@ -1,3 +1,4 @@
+import {consentEligible} from './consent-exclusions';
 import {candidates,reviewParcels} from './candidates';
 import {buildingName,clean,compareSurveyUnitsAsc} from './housing';
 
@@ -66,5 +67,5 @@ export function buildInventory(lookups:any[],catalogs:any[],saved:any[]=[]){
  const targetParcels=lookups.filter(l=>!reviewParcels.has(l.parcel)&&(l.buildings??[]).some((b:any)=>b.main!=='부속건축물'&&(/주택|아파트/.test(b.type+' '+b.detail)||count(b.households)||count(b.families)))).map(l=>l.parcel);
  const checks=targetParcels.map(p=>catalogs.find(c=>c.parcel===p)).filter(c=>c?.catalogVersion===2);
  const detailSummary={total:targetParcels.length,attempted:checks.length,pending:targetParcels.length-checks.length,success:checks.filter(c=>c.addressStatus==='success').length,errors:checks.filter(c=>c.addressStatus==='error').length,noData:checks.filter(c=>c.addressStatus==='no_data').length,noAddress:checks.filter(c=>c.addressStatus==='not_available').length,notConfigured:checks.filter(c=>c.addressStatus==='not_configured').length,matchedBuildings:buildings.filter(b=>b.detailCheck==='대장·상세주소 호수 일치').length};
- return {units:merged,buildings,issues,summary:{detail:detailSummary,total:merged.length,official:merged.filter(u=>u.official).length,provisional:merged.filter(u=>!u.official).length,buildingCount:buildings.filter(b=>b.count).length,unresolvedBuildings:issues.filter(i=>i.reason.includes('수량 0')).length,unresolvedParcels:lookups.filter(l=>!reviewParcels.has(l.parcel)&&!l.buildings?.length).length,unitLookupErrors:catalogs.filter(c=>c.registryStatus==='error').length,conflicts:issues.filter(i=>!i.reason.includes('수량 0')).length,reviewParcels:reviewParcels.size}};
+ return {units:merged,buildings,issues,summary:{detail:detailSummary,total:merged.length,consentTotal:merged.filter(consentEligible).length,excludedUnits:merged.filter(u=>!consentEligible(u)).length,official:merged.filter(u=>u.official).length,provisional:merged.filter(u=>!u.official).length,buildingCount:buildings.filter(b=>b.count).length,unresolvedBuildings:issues.filter(i=>i.reason.includes('수량 0')).length,unresolvedParcels:lookups.filter(l=>!reviewParcels.has(l.parcel)&&!l.buildings?.length).length,unitLookupErrors:catalogs.filter(c=>c.registryStatus==='error').length,conflicts:issues.filter(i=>!i.reason.includes('수량 0')).length,reviewParcels:reviewParcels.size}};
 }
