@@ -6,8 +6,9 @@ const points:[string,number|null,number|null][]=[
 ,['214-73',488,476],['214-70',532,462],['214-24',657,611],['214-22',779,639],['214-23',718,579],['214-88',709,997],['214-89',711,1030],['214-105',614,841],['229-8',773,545],['229-15',832,622],['229-16',862,652],['229-17',862,686],['230-3',840,484],['227-2',815,501],['227-3',863,503],['227-5',845,531],['228-1',819,528],['228-4',820,546],['235-3',793,324],['239-6',955,377],['239-17',903,355],['234-3',830,289]
 ];
 // Field-reported parcels: no diagram marker until location is verified.
+points.push(...['232-3','214','214-1','214-7','234-4','239-23','226-1','225-2','241-7','227-1','228-2','27-20'].map(p=>[p,null,null] as [string,null,null]));
 points.push(['214-106',null,null],['244',null,null],['228-3',null,null],['228-16',null,null],['221-7',null,null]);
-const gugi=new Set(['36-2','27-13','27-10','27-8','27-7']);
+const gugi=new Set(['36-2','27-13','27-10','27-8','27-7','27-20']);
 export const unmappedParcels=new Set(['214-106','244','228-3','228-16','221-7','214-21']);
 export const candidates=points.map(([parcel,x,y])=>({parcel,x,y,dong:gugi.has(parcel)?'구기동':'신영동',lawCode:gugi.has(parcel)?'1111018200':'1111018600'})).sort((a,b)=>compareParcelsAsc(a.parcel,b.parcel));
 export function parcelLabel(parcel:string){const c=candidates.find(c=>c.parcel===parcel);return `${c?.dong??'신영동'} ${parcel}`;}

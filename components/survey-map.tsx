@@ -8,6 +8,7 @@ import {buildingName} from '@/lib/housing';
 import {consentColors,consentStatuses,consentSummary} from '@/lib/consent';
 import {unitMatchesParcel} from '@/lib/unit-inventory';
 import {VectorConsentMap} from './vector-consent-map';
+import {assetPath} from '@/lib/client-runtime';
 import {naverPoints} from '@/lib/naver-map-points';
 import {updatedPoints} from '@/lib/map-points';
 type Props={selected:string;onSelect:(parcel:string)=>void;lookups:any[];households:{parcel:string;status:string}[];consent?:boolean};
@@ -16,7 +17,7 @@ export function SurveyMap({selected,onSelect,lookups,households,consent=false}:P
  const [source,setSource]=useState(consent?'naver':'updated'),[zoom,setZoom]=useState(1),[full,setFull]=useState(false),[search,setSearch]=useState(''),[status,setStatus]=useState('전체'),[labels,setLabels]=useState('선택만'),[failed,setFailed]=useState(false);
  const viewport=useRef<HTMLDivElement>(null);
  useEffect(()=>{if(!full)return;const old=document.body.style.overflow;document.body.style.overflow='hidden';const close=(e:KeyboardEvent)=>{if(e.key==='Escape')setFull(false);};window.addEventListener('keydown',close);return()=>{document.body.style.overflow=old;window.removeEventListener('keydown',close);};},[full]);
- const original=source==='original',naver=source==='naver',width=original?1888:naver?861:658,height=original?1333:naver?925:588,path=original?'/plan.jpg':naver?'/plan-naver.png':'/plan-updated.png';
+ const original=source==='original',naver=source==='naver',width=original?1888:naver?861:658,height=original?1333:naver?925:588,path=assetPath(original?'/plan.jpg':naver?'/plan-naver.png':'/plan-updated.png');
  const rows=candidates.filter(c=>!reviewParcels.has(c.parcel)&&(source==='naver'?!!naverPoints[c.parcel]:!unmappedParcels.has(c.parcel))).map(c=>{const lookup=lookups.find(l=>l.parcel===c.parcel),name=buildingName(lookup,'명칭 미기재'),summary=consentSummary(households.filter(h=>unitMatchesParcel(h,c.parcel)));const p=original?(c.x!==null&&c.y!==null?[c.x,c.y]:undefined):naver?naverPoints[c.parcel]:updatedPoints[c.parcel];return {...c,name,summary,p};}).filter(c=>c.p&&(!search||(parcelLabel(c.parcel)+' '+c.name).includes(search.trim()))&&(status==='전체'||c.summary.status===status||(status!=='혼재'&&c.summary.counts[status]>0)));
  const selectedRow=rows.find(c=>c.parcel===selected);
  const unit=original?2.6:naver?1.5:1;
