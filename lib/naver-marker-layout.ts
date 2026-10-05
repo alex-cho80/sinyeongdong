@@ -6,8 +6,8 @@ export const naverInteriorPoints:Record<string,[number,number]> = {
   506
  ],
  "223": [
-  730,
-  471
+  733,
+  463
  ],
  "231": [
   614,
@@ -358,8 +358,8 @@ export const naverInteriorPoints:Record<string,[number,number]> = {
   230
  ],
  "226-1": [
-  605,
-  259
+  603,
+  258
  ],
  "226-2": [
   633,
@@ -494,8 +494,8 @@ export const naverInteriorPoints:Record<string,[number,number]> = {
   476
  ],
  "228-1": [
-  533,
-  338
+  532,
+  326
  ],
  "227-3": [
   608,
@@ -517,13 +517,14 @@ export const naverInteriorPoints:Record<string,[number,number]> = {
 // These identities do not have an independently identifiable box in this image.
 // Keep records and source-diagram references; do not place a dot in a neighbouring box.
 export const naverUnplaced:Record<string,string> = {
+ '227-3':'네이버 이미지에서 독립 구획을 확인하지 못했습니다. 기존 동그라미가 226-1과 같은 구획에 있어 위치 확인 목록으로 옮겼습니다.',
  '27-13':'네이버 이미지에서 27-13의 독립 구획을 확인하지 못했습니다. 인접 27-20은 별도 표시합니다.',
  '214-105':'원본의 214-105와 네이버의 214-106 표기가 달라 같은 칸에 동그라미를 중복 표시하지 않습니다. 조사 기록은 유지합니다.',
  '239-2':'원본에는 위치가 있으나 네이버 이미지에서 239-2의 독립 구획을 확인하지 못했습니다.',
  '239-17':'원본에는 위치가 있으나 네이버 이미지에서 239-17과 인접 239-23의 구획 대조가 필요합니다.',
 };
-export const naverSmallMarkers = new Set(['214-70','214-73','214-75','214-83','214-84','214-22','214-23','214-78','214-82','214-85','214-17','214-18','229-9','229-15','229-16','229-17','228-1','228-2','228-4','228-16','227-3','226-7','232-1','232-2','232-3','239-23','241-7']);
-export const naverMarkerRadius=(parcel:string)=>['228-1','228-2'].includes(parcel)?2:naverSmallMarkers.has(parcel)?2.6:5.5;
+export const naverSmallMarkers = new Set(['214-70','214-73','214-75','214-83','214-84','214-22','214-23','214-78','214-82','214-85','214-17','214-18','229-9','229-15','229-16','229-17','228-1','228-2','228-4','228-16','227-3','226-7','226-1','244','223','232-1','232-2','232-3','239-23','241-7']);
+export const naverMarkerRadius=(parcel:string)=>parcel==='228-1'?1.1:parcel==='228-2'?2:naverSmallMarkers.has(parcel)?2.6:5.5;
 // Visually checked inset rectangles inside troublesome parcels. These are
 // containment checks for UI markers, not cadastral polygons.
 export const naverSafeAreas:Record<string,[number,number,number,number]>={

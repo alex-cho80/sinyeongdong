@@ -6,7 +6,7 @@ import {pathToFileURL} from 'node:url';
 import assert from 'node:assert/strict';
 const dir=mkdtempSync(join(tmpdir(),'unit-inventory-'));
 try{
- for(const name of ['candidates','housing','unit-inventory','access-policy','consent-exclusions','map-points','map-image-registration','map-supplement']){const source=readFileSync(new URL(`../lib/${name}.ts`,import.meta.url),'utf8').replace(/from '(\.\/[^']+)'/g,"from '$1.mjs'");writeFileSync(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText);}
+ for(const name of ['candidates','housing','unit-inventory','access-policy','consent-exclusions','map-points','map-image-registration','map-supplement','source-marker-layout']){const source=readFileSync(new URL(`../lib/${name}.ts`,import.meta.url),'utf8').replace(/from '(\.\/[^']+)'/g,"from '$1.mjs'");writeFileSync(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText);}
  const {buildInventory}=await import(pathToFileURL(join(dir,'unit-inventory.mjs')));
  const building={id:'1002118471',queriedParcel:'27-10',name:'오성빌라',type:'공동주택',detail:'연립주택',households:6,families:0,dong:'',main:'주건축물'};
  const lookup={parcel:'27-10',buildings:[building],addresses:[]};

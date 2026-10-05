@@ -1,3 +1,4 @@
+import {updatedInteriorOverrides} from './source-marker-layout';
 import {projectFromNaver} from './map-image-registration';
 import {supplementalNaverPoints} from './map-supplement';
 // Manually read label positions in the supplied 658 x 588 red-boundary image.
@@ -34,4 +35,4 @@ export const surveyReferencePoints:Record<string,[number,number]>={
 
 // Supplements have one shared identity and location in both map menus.
 export const updatedPoints:Record<string,[number,number]>={...surveyReferencePoints,
- ...Object.fromEntries(Object.entries(supplementalNaverPoints).map(([parcel,p])=>[parcel,projectFromNaver(p)]))};
+ ...Object.fromEntries(Object.entries(supplementalNaverPoints).map(([parcel,p])=>[parcel,projectFromNaver(p)])), ...updatedInteriorOverrides};
