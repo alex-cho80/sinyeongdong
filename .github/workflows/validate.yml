@@ -30,5 +30,7 @@ jobs:
         run: pnpm exec tsc --noEmit
       - name: Unit inventory regression checks
         run: node tests/unit-inventory.mjs
+      - name: Visit tracking and migration checks
+        run: node tests/household-visits.mjs
       - name: Build Worker and client
         run: pnpm build

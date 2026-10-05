@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import ts from 'typescript';
+import {DatabaseSync} from 'node:sqlite';
+import {readFileSync,writeFileSync,mkdtempSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+const temp=mkdtempSync(join(tmpdir(),'visits-'));
+const db=new DatabaseSync(':memory:');
+try{
+ db.exec(readFileSync(new URL('../drizzle/0000_ordinary_swarm.sql',import.meta.url),'utf8'));
+ db.prepare('INSERT INTO households(id,parcel,building,unit,status,revision,updated) VALUES(?,?,?,?,?,?,?)').run('saved','214-62','집','1호','동의',4,'before');
+ db.exec(readFileSync(new URL('../drizzle/0002_tough_vulture.sql',import.meta.url),'utf8'));
+ const prior=db.prepare('SELECT * FROM households').get();assert.equal(prior.status,'동의');assert.equal(prior.visitStatus,'미확인');assert.equal(prior.revision,4);
+ globalThis.__visitDb={prepare(sql){return {bind(...args){return {first:async()=>db.prepare(sql).get(...args),run:async()=>({meta:{changes:Number(db.prepare(sql).run(...args).changes)}})};}};},async batch(statements){db.exec('BEGIN');try{const rows=[];for(const s of statements)rows.push(await s.run());db.exec('COMMIT');return rows;}catch(e){db.exec('ROLLBACK');throw e;}}};
+ globalThis.__visitUnits=[{id:'generated',parcel:'214-62',building:'집',unit:'2호',status:'미조사',revision:0}];
+ const stub=`export const database=()=>globalThis.__visitDb;export const failure=()=>Response.json({}, {status:503});export const guard=req=>req.headers.get('x-test-owner')==='yes'?null:Response.json({}, {status:401});export const parcelIds=new Set(['214-62']);export const loadInventory=async()=>({units:globalThis.__visitUnits});`;
+ writeFileSync(join(temp,'stub.mjs'),stub);
+ let source=readFileSync(new URL('../app/api/households/route.ts',import.meta.url),'utf8').replace(/from '@\/lib\/[^']+'/g,"from './stub.mjs'");
+ source=source.replace("from 'zod'",`from '${pathToFileURL(new URL('../node_modules/zod/index.js',import.meta.url).pathname)}'`);
+ writeFileSync(join(temp,'route.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText);
+ const {POST}=await import(pathToFileURL(join(temp,'route.mjs')));
+ const send=(p,owner=true)=>POST(new Request('https://example.test/api/households',{method:'POST',headers:{'content-type':'application/json',...(owner?{'x-test-owner':'yes'}:{})},body:JSON.stringify(p)}));
+ const base={id:'saved',parcel:'214-62',building:'집',unit:'1호',status:'동의',revision:4};
+ assert.equal((await send({...base,visitStatus:'방문 완료',ownerStatus:'미확인'})).status,200);
+ let row=db.prepare('SELECT * FROM households WHERE id=?').get('saved');assert.equal(row.status,'동의');assert.equal(row.visitStatus,'방문 완료');assert.equal(row.revision,5);
+ assert.equal((await send(base)).status,409);assert.equal(db.prepare('SELECT count(*) n FROM audit').get().n,1);
+ assert.equal((await send({...base,revision:5,status:'보류'})).status,200);row=db.prepare('SELECT * FROM households WHERE id=?').get('saved');assert.equal(row.visitStatus,'방문 완료');assert.equal(row.ownerStatus,'미확인');
+ assert.equal((await send({...globalThis.__visitUnits[0],visitStatus:'방문 완료'})).status,200);row=db.prepare('SELECT * FROM households WHERE id=?').get('generated');assert.equal(row.status,'미조사');assert.equal(row.ownerStatus,'미확인');
+ assert.equal((await send({...base,revision:6},false)).status,401);
+ assert.equal((await send({...base,revision:6,visitStatus:'invalid'})).status,400);
+ console.log('PASS: migration preserves consent; visits independent; omitted fields preserved; stale revision rejected; anonymous writes denied; invalid visits rejected');
+}finally{db.close();delete globalThis.__visitDb;delete globalThis.__visitUnits;rmSync(temp,{recursive:true,force:true});}

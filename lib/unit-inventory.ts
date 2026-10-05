@@ -1,7 +1,7 @@
 import {candidates,reviewParcels} from './candidates';
 import {buildingName,clean,compareSurveyUnitsAsc} from './housing';
 
-export type SurveyUnit={id:string;parcel:string;parcels:string[];buildingId:string;building:string;unit:string;status:string;revision:number;source:string;official:boolean;basis:string;warning:string;road:string;floor:string;detailCheck?:string};
+export type SurveyUnit={id:string;parcel:string;parcels:string[];buildingId:string;building:string;unit:string;status:string;revision:number;source:string;official:boolean;basis:string;warning:string;road:string;floor:string;detailCheck?:string;visitStatus?:string;ownerStatus?:string};
 export const unitMatchesParcel=(u:{parcel:string;parcels?:string[]},p:string)=>u.parcel===p||!!u.parcels?.includes(p);
 const count=(n:unknown)=>Number.isInteger(Number(n))&&Number(n)>0?Number(n):0;
 const norm=(v:unknown)=>clean(v).replace(/\s/g,'').replace(/동$/,'');
@@ -61,6 +61,7 @@ export function buildInventory(lookups:any[],catalogs:any[],saved:any[]=[]){
  // A saved consent always wins. Never transfer it to a different official unit.
  const merged=units.map(u=>{const s=saved.find(s=>s.id===u.id)||saved.find(s=>!used.has(s.id)&&unitMatchesParcel(u,s.parcel)&&s.building===u.building&&s.unit===u.unit);if(!s)return u;used.add(s.id);return {...u,...s,parcels:u.parcels,source:s.unit===u.unit?u.source:'관리자 호수 확인',official:s.unit===u.unit?u.official:true};});
  for(const s of saved){if(used.has(s.id))continue;merged.push({...s,parcels:[s.parcel],buildingId:'manual',source:'수동 등록 · 중복 여부 확인',official:false,basis:'관리자 등록',warning:'자동 목록과 중복 여부 확인',road:'',floor:''});}
+ for(const unit of merged){unit.visitStatus??='미확인';unit.ownerStatus??='미확인';}
  merged.sort(compareSurveyUnitsAsc);
  const targetParcels=lookups.filter(l=>!reviewParcels.has(l.parcel)&&(l.buildings??[]).some((b:any)=>b.main!=='부속건축물'&&(/주택|아파트/.test(b.type+' '+b.detail)||count(b.households)||count(b.families)))).map(l=>l.parcel);
  const checks=targetParcels.map(p=>catalogs.find(c=>c.parcel===p)).filter(c=>c?.catalogVersion===2);
